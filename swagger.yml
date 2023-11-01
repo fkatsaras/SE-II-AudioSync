@@ -1,62 +1,16 @@
 openapi: "3.0.0"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/KARDITSAFOTIS/ELearning/1.0.0
 info:
   version: "1.0.0"
-  title: "Hospital API"
-  description: "API for managing a hospital"
+  title: "E-Learning Platform API"
+  description: "API for an E-Learning Platform"
+  contact:
+    email: "karditsafotis@gmail.com"
 
 paths:
-  /books:
-    get:
-      summary: "Get a list of books"
-      responses:
-        200:
-          description: "A list of books"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Book"
-    post:
-      summary: "Add a new book"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Book"
-      responses:
-        201:
-          description: "Book successfully added"
-  
-  /books/{bookId}:
-    get:
-      summary: "Get details of a book"
-      parameters:
-        - name: "bookId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        200:
-          description: "Detailed information about a book"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Book"
-    delete:
-      summary: "Delete a book"
-      parameters:
-        - name: "bookId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        204:
-          description: "Book successfully deleted"
-  
   /users:
     get:
       summary: "Get a list of users"
@@ -69,6 +23,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/User"
+
     post:
       summary: "Create a new user"
       requestBody:
@@ -80,7 +35,7 @@ paths:
       responses:
         201:
           description: "User successfully created"
-  
+
   /users/{userId}:
     get:
       summary: "Get details of a user"
@@ -97,6 +52,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+
     put:
       summary: "Update user details"
       parameters:
@@ -110,10 +66,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserUpdate"
+              $ref: "#/components/schemas/User"
       responses:
         200:
           description: "User successfully updated"
+
     delete:
       summary: "Delete a user"
       parameters:
@@ -126,51 +83,53 @@ paths:
         204:
           description: "User successfully deleted"
 
-  /users/{userId}/borrowings:
+
+  /students:
     get:
-      summary: "Get a list of borrowed books by a user"
-      parameters:
-        - name: "userId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
+      summary: "Get a list of students"
       responses:
         200:
-          description: "A list of borrowed books"
+          description: "A list of students"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Borrowing"
-  
-  /books/{bookId}/borrow:
-    post:
-      summary: "Borrow a book"
-      parameters:
-        - name: "bookId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/BorrowRequest"
-      responses:
-        200:
-          description: "Book successfully borrowed"
-        400:
-          description: "Bad request, book not available or user invalid"
+                  $ref: "#/components/schemas/Student"
 
-  /books/{bookId}/return:
     post:
-      summary: "Return a borrowed book"
+      summary: "Enroll a new student"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        201:
+          description: "Student successfully enrolled"
+
+  /students/{studentId}:
+    get:
+      summary: "Get details of a student"
       parameters:
-        - name: "bookId"
+        - name: "studentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Detailed information about a student"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+
+    put:
+      summary: "Update student details"
+      parameters:
+        - name: "studentId"
           in: "path"
           required: true
           schema:
@@ -180,69 +139,230 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ReturnRequest"
+              $ref: "#/components/schemas/Student"
       responses:
         200:
-          description: "Book successfully returned"
-        400:
-          description: "Bad request, return not possible"
+          description: "Student details successfully updated"
+
+    delete:
+      summary: "Remove a student"
+      parameters:
+        - name: "studentId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        204:
+          description: "Student successfully removed"
+
+  /instructors:
+    get:
+      summary: "Get a list of instructors"
+      responses:
+        200:
+          description: "A list of instructors"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Instructor"
+
+    post:
+      summary: "Hire a new instructor"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Instructor"
+      responses:
+        201:
+          description: "Instructor successfully hired"
+
+  /instructors/{instructorId}:
+    get:
+      summary: "Get details of an instructor"
+      parameters:
+        - name: "instructorId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Detailed information about an instructor"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Instructor"
+
+    put:
+      summary: "Update instructor details"
+      parameters:
+        - name: "instructorId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Instructor"
+      responses:
+        200:
+          description: "Instructor details successfully updated"
+
+    delete:
+      summary: "Dismiss an instructor"
+      parameters:
+        - name: "instructorId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        204:
+          description: "Instructor successfully dismissed"
+
+  /courses:
+    # Define endpoints for course management
+
+  /assessments:
+    # Define endpoints for assessments, quizzes, etc.
+
+  /reports:
+    # Define endpoints for student reports, grades, etc.
+
+  /messages:
+    # Define endpoints for messaging system
+
+  /resources:
+    get:
+      summary: "Get a list of course resources"
+      responses:
+        200:
+          description: "A list of course resources"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Resource"
+
+    post:
+      summary: "Create a new course resource"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Resource"
+      responses:
+        201:
+          description: "Resource successfully created"
 
 components:
   schemas:
-    Book:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-        title:
-          type: "string"
-        author:
-          type: "string"
-        isbn:
-          type: "string"
-        available:
-          type: "boolean"
-
     User:
       type: "object"
       properties:
-        id:
+        userId:
           type: "integer"
-        name:
+        username:
+          type: "string"
+        password:
           type: "string"
         email:
           type: "string"
-    
-    UserUpdate:
-      type: "object"
-      properties:
-        name:
+        fullName:
           type: "string"
-        email:
+        registrationDate:
           type: "string"
+          format: "date-time"
+        userType:
+          type: "string"
+          # Define this based on roles, e.g., student, instructor, admin
+        lastLogin:
+          type: "string"
+          format: "date-time"
+      required:
+        - userId
+        - username
+        - password
+        - email
+        - userType
 
-    Borrowing:
+    Student:
       type: "object"
       properties:
-        userId:
+        studentId:
           type: "integer"
-        bookId:
-          type: "integer"
-        borrowDate:
+        username:
           type: "string"
-          format: "date-time"
-        dueDate:
+        password:
           type: "string"
-          format: "date-time"
-    
-    BorrowRequest:
+        email:
+          type: "string"
+        fullName:
+          type: "string"
+        enrolledCourses:
+          type: "array"
+          items:
+            type: "string"
+          # Enrolled courses (course names or IDs)
+        grade:
+          type: "string"
+        yearOfStudy:
+          type: "integer"
+      required:
+        - studentId
+        - username
+        - password
+        - email
+        - fullName
+
+    Instructor:
       type: "object"
       properties:
-        userId:
+        instructorId:
           type: "integer"
-    
-    ReturnRequest:
-      type: "object"
-      properties:
-        userId:
-          type: "integer"
+        username:
+          type: "string"
+        password:
+          type: "string"
+        email:
+          type: "string"
+        fullName:
+          type: "string"
+        department:
+          type: "string"
+        coursesTaught:
+          type: "array"
+          items:
+            type: "string"
+          # Courses taught by the instructor (course names or IDs)
+      required:
+        - instructorId
+        - username
+        - password
+        - email
+        - fullName
+
+    Course:
+      # Schema for Course entity
+
+    Assessment:
+      # Schema for Assessment entity
+
+    Report:
+      # Schema for Report entity
+
+    Message:
+      # Schema for Message entity
+
+    Resource:
+      # Schema for Resource entity
