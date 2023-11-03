@@ -1,29 +1,12 @@
-openapi: "3.0.0"
-servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/KARDITSAFOTIS/ELearning/1.0.0
+openapi: 3.0.0
+
 info:
   version: "1.0.0"
-  title: "E-Learning Platform API"
-  description: "API for an E-Learning Platform"
-  contact:
-    email: "karditsafotis@gmail.com"
-
+  title: Music-streaming-api
+  description: The API for a music streaming app
+  
 paths:
-  /users:
-    get:
-      summary: "Get a list of users"
-      responses:
-        200:
-          description: "A list of users"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/User"
-
+  /users:  #Put users on the platform
     post:
       summary: "Create a new user"
       requestBody:
@@ -33,10 +16,47 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
       responses:
-        201:
+        '201':
           description: "User successfully created"
+        '409':
+          description: "User already exists!"
+          
+  /login:
+    post:
+      summary: "User login"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                username:
+                  type: "string"
+                password:
+                  type: "string"
+      responses:
+        '200':
+          description: "User successfully logged in"
+        '401':
+          description: "Wrong password!"
+          
+  /register:
+    post:
+      summary: "User registration"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistration"
+      responses:
+        '201':
+          description: "User successfully registered"
+        '409':
+          description: "Account already registered"
 
-  /users/{userId}:
+  /users/{userId}:  #Get/ update a specific users details/ delete a user
     get:
       summary: "Get details of a user"
       parameters:
@@ -46,13 +66,12 @@ paths:
           schema:
             type: "integer"
       responses:
-        200:
+        '200':
           description: "Detailed information about a user"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-
     put:
       summary: "Update user details"
       parameters:
@@ -66,11 +85,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/UserUpdate"
       responses:
-        200:
+        '200':
           description: "User successfully updated"
-
     delete:
       summary: "Delete a user"
       parameters:
@@ -80,56 +98,83 @@ paths:
           schema:
             type: "integer"
       responses:
-        204:
+        '204':
           description: "User successfully deleted"
-
-
-  /students:
+          
+  /users/{userId}/liked-songs:  #See users liked songs/ Like/unlike song
     get:
-      summary: "Get a list of students"
-      responses:
-        200:
-          description: "A list of students"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Student"
-
-    post:
-      summary: "Enroll a new student"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Student"
-      responses:
-        201:
-          description: "Student successfully enrolled"
-
-  /students/{studentId}:
-    get:
-      summary: "Get details of a student"
+      summary: "Get liked songs of a user"
       parameters:
-        - name: "studentId"
+        - name: "userId"
           in: "path"
           required: true
           schema:
             type: "integer"
       responses:
-        200:
-          description: "Detailed information about a student"
+        '200':
+          description: "Users liked songs"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Student"
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Song"
+    post:
+      summary: "Like a song"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Song"
+      responses:
+        '201':
+          description: "Song liked!"
+          
+    delete:
+      summary: "Unlike a song"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "songId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "Song unliked"
+          
+  /users/{userId}/preferences:
+    get:
+      summary: "Get user preferences"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "User's preferences"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserPreferences"
 
     put:
-      summary: "Update student details"
+      summary: "Update user preferences"
       parameters:
-        - name: "studentId"
+        - name: "userId"
           in: "path"
           required: true
           schema:
@@ -139,69 +184,55 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Student"
+              $ref: "#/components/schemas/UserPreferences"
       responses:
-        200:
-          description: "Student details successfully updated"
+        '200':
+          description: "User preferences updated"
 
-    delete:
-      summary: "Remove a student"
-      parameters:
-        - name: "studentId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        204:
-          description: "Student successfully removed"
-
-  /instructors:
+  /playlists:
     get:
-      summary: "Get a list of instructors"
+      summary: "Get a list of playlists"
       responses:
-        200:
-          description: "A list of instructors"
+        '200':
+          description: "A list of playlists"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Instructor"
-
+                  $ref: "#/components/schemas/Playlist"
     post:
-      summary: "Hire a new instructor"
+      summary: "Create a new playlist"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Instructor"
+              $ref: "#/components/schemas/Playlist"
       responses:
-        201:
-          description: "Instructor successfully hired"
+        '201':
+          description: "Playlist successfully created"
 
-  /instructors/{instructorId}:
+  /playlists/{playlistId}:
     get:
-      summary: "Get details of an instructor"
+      summary: "Get details of a playlist"
       parameters:
-        - name: "instructorId"
+        - name: "playlistId"
           in: "path"
           required: true
           schema:
             type: "integer"
       responses:
-        200:
-          description: "Detailed information about an instructor"
+        '200':
+          description: "Detailed information about a playlist"
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Instructor"
-
+                $ref: "#/components/schemas/Playlist"
     put:
-      summary: "Update instructor details"
+      summary: "Update playlist details"
       parameters:
-        - name: "instructorId"
+        - name: "playlistId"
           in: "path"
           required: true
           schema:
@@ -211,158 +242,179 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Instructor"
+              $ref: "#/components/schemas/PlaylistUpdate"
       responses:
-        200:
-          description: "Instructor details successfully updated"
-
+        '200':
+          description: "Playlist successfully updated"
     delete:
-      summary: "Dismiss an instructor"
+      summary: "Delete a playlist"
       parameters:
-        - name: "instructorId"
+        - name: "playlistId"
           in: "path"
           required: true
           schema:
             type: "integer"
       responses:
-        204:
-          description: "Instructor successfully dismissed"
-
-  /courses:
-    # Define endpoints for course management
-
-  /assessments:
-    # Define endpoints for assessments, quizzes, etc.
-
-  /reports:
-    # Define endpoints for student reports, grades, etc.
-
-  /messages:
-    # Define endpoints for messaging system
-
-  /resources:
+        '204':
+          description: "Playlist successfully deleted"
+  
+  /songs/{songId}:
     get:
-      summary: "Get a list of course resources"
+      summary: "Get details of a song"
+      parameters:
+        - name: "songId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
       responses:
-        200:
-          description: "A list of course resources"
+        '200':
+          description: "Detailed information about a song"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Song"
+  
+  /playlists/{playlistId}/songs:
+    get:
+      summary: "Get songs in a playlist"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Songs in the playlist"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Resource"
+                  $ref: "#/components/schemas/Song"
 
     post:
-      summary: "Create a new course resource"
+      summary: "Add a song to a playlist"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Resource"
+              $ref: "#/components/schemas/Song"
       responses:
-        201:
-          description: "Resource successfully created"
+        '201':
+          description: "Song added to the playlist"
+
+    delete:
+      summary: "Remove a song from a playlist"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "songId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "Song removed from the playlist"
+        '400':
+          description: "Invalid name"
+        '404':
+          description: "Song not found"
 
 components:
   schemas:
     User:
       type: "object"
       properties:
-        userId:
+        id:
           type: "integer"
         username:
           type: "string"
-        password:
-          type: "string"
         email:
           type: "string"
-        fullName:
-          type: "string"
-        registrationDate:
-          type: "string"
-          format: "date-time"
-        userType:
-          type: "string"
-          # Define this based on roles, e.g., student, instructor, admin
-        lastLogin:
-          type: "string"
-          format: "date-time"
-      required:
-        - userId
-        - username
-        - password
-        - email
-        - userType
-
-    Student:
+    
+    UserUpdate:
       type: "object"
       properties:
-        studentId:
-          type: "integer"
         username:
-          type: "string"
-        password:
           type: "string"
         email:
           type: "string"
-        fullName:
+          
+    UserRegistration:
+     type: "object"
+     properties:
+       username:
+         type: "string"
+       email:
+         type: "string"
+       password:
+         type: "string"
+
+    Playlist:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        title:
           type: "string"
-        enrolledCourses:
+        description:
+          type: "string"
+
+    PlaylistUpdate:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        description:
+          type: "string"
+  
+    UserPreferences:
+      type: "object"
+      properties:
+        preferredGenres:
           type: "array"
           items:
             type: "string"
-          # Enrolled courses (course names or IDs)
-        grade:
-          type: "string"
-        yearOfStudy:
-          type: "integer"
-      required:
-        - studentId
-        - username
-        - password
-        - email
-        - fullName
-
-    Instructor:
-      type: "object"
-      properties:
-        instructorId:
-          type: "integer"
-        username:
-          type: "string"
-        password:
-          type: "string"
-        email:
-          type: "string"
-        fullName:
-          type: "string"
-        department:
-          type: "string"
-        coursesTaught:
+        preferredArtists:
           type: "array"
           items:
             type: "string"
-          # Courses taught by the instructor (course names or IDs)
-      required:
-        - instructorId
-        - username
-        - password
-        - email
-        - fullName
-
-    Course:
-      # Schema for Course entity
-
-    Assessment:
-      # Schema for Assessment entity
-
-    Report:
-      # Schema for Report entity
-
-    Message:
-      # Schema for Message entity
-
-    Resource:
-      # Schema for Resource entity
+        settings:
+          type: "object"
+          properties:
+            theme:
+              type: "string"
+              enum:
+                - "light"
+                - "dark"
+            notifications:
+              type: "boolean"
+  
+    Song:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        title:
+          type: "string"
+        artist:
+          type: "string"
+        duration:
+          type: "string"
+        genre:
+          type: "string"
+        source:
+          type: "string"
