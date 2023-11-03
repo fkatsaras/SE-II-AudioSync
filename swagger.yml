@@ -39,7 +39,7 @@ paths:
         '200':
           description: "User successfully logged in"
         '401':
-          description: "Wrong password!"
+          description: "Incorrect username or password"
           
   /register:
     post:
@@ -72,6 +72,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        '404':
+          description: "User not found"
     put:
       summary: "Update user details"
       parameters:
@@ -90,7 +92,7 @@ paths:
         '200':
           description: "User successfully updated"
     delete:
-      summary: "Delete a user"
+      summary: "Delete a specific user"
       parameters:
         - name: "userId"
           in: "path"
@@ -100,6 +102,8 @@ paths:
       responses:
         '204':
           description: "User successfully deleted"
+        '404':
+          description: "User not found"
           
   /users/{userId}/liked-songs:  #See users liked songs/ Like/unlike song
     get:
@@ -229,6 +233,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Playlist"
+        '404':
+          description: "Playlist not found"
     put:
       summary: "Update playlist details"
       parameters:
@@ -257,6 +263,8 @@ paths:
       responses:
         '204':
           description: "Playlist successfully deleted"
+        '404': 
+          description: "Playlist not found"
   
   /songs/{songId}:
     get:
@@ -274,6 +282,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Song"
+        '404':
+          description: "Song not in the platform"
+        
   
   /playlists/{playlistId}/songs:
     get:
@@ -293,6 +304,8 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Song"
+        '404':
+          description: "Song not in playlist"
 
     post:
       summary: "Add a song to a playlist"
@@ -332,6 +345,59 @@ paths:
           description: "Invalid name"
         '404':
           description: "Song not found"
+          
+  /artists/{artistId}:
+    get:
+      summary: "Get details of an artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Details about the artist"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Artist"
+        '404':
+          description: "Artist not found"
+  
+  /artists:
+    get:
+      summary: "Get a list of artists"
+      responses:
+        '200':
+          description: "A list of artists"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Artist"
+                  
+  /artists/{artistId}/albums:
+    get:
+      summary: "Get albums of a specific artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Albums of the specified artist"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Playlist"  
+        '404':
+          description: "Artist not found or no albums available"
 
 components:
   schemas:
@@ -418,3 +484,21 @@ components:
           type: "string"
         source:
           type: "string"
+          
+    Artist:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        name:
+          type: "string"
+        genre:
+          type: "string"
+        albums:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Playlist" 
+        songs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Song"
