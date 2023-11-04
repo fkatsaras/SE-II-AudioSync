@@ -6,22 +6,7 @@ info:
   description: The API for a music streaming app
   
 paths:
-  /users:  #Put users on the platform
-    post:
-      summary: "Create a new user"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-      responses:
-        '201':
-          description: "User successfully created"
-        '409':
-          description: "User already exists!"
-          
-  /login:
+  /login: #Users sould login in the platform with thir account
     post:
       summary: "User login"
       requestBody:
@@ -40,8 +25,8 @@ paths:
           description: "User successfully logged in"
         '401':
           description: "Incorrect username or password"
-          
-  /register:
+   
+  /register:  #Users should create an account and get in the platform
     post:
       summary: "User registration"
       requestBody:
@@ -49,14 +34,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserRegistration"
+              $ref: "#/components/schemas/User"
       responses:
         '201':
           description: "User successfully registered"
         '409':
-          description: "Account already registered"
+          description: "User account already exists"
 
-  /users/{userId}:  #Get/ update a specific users details/ delete a user
+  /users/{userId}:  #users should be able to see another users details/ update THEIR details/ delete THEIR account
     get:
       summary: "Get details of a user"
       parameters:
@@ -90,7 +75,9 @@ paths:
               $ref: "#/components/schemas/UserUpdate"
       responses:
         '200':
-          description: "User successfully updated"
+          description: "User details successfully updated"
+        '403':
+          description: "Forbidden - User not the owner of the account"
     delete:
       summary: "Delete a specific user"
       parameters:
@@ -104,8 +91,10 @@ paths:
           description: "User successfully deleted"
         '404':
           description: "User not found"
+        '403':
+          description: "Forbidden - User not the owner of the account"
           
-  /users/{userId}/liked-songs:  #See users liked songs/ Like/unlike song
+  /users/{userId}/liked-songs:  #Users should b able to see their liked songs/ like/ unlike a song
     get:
       summary: "Get liked songs of a user"
       parameters:
@@ -158,7 +147,61 @@ paths:
         '204':
           description: "Song unliked"
           
-  /users/{userId}/preferences:
+  /users/{userId}/liked-playlists: #Users should be able to see their liked playlist /like/ unlike a playlist
+    get:
+      summary: "Get liked playlists of a user"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Users liked playlists"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Playlist"
+
+    post:
+      summary: "Like a playlist"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Playlist"
+      responses:
+        '201':
+          description: "Playlist liked!"
+
+    delete:
+      summary: "Unlike a playlist"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "playlistId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "Playlist unliked"
+          
+  /users/{userId}/preferences: #Users should be able to see/ update their account preferences
     get:
       summary: "Get user preferences"
       parameters:
@@ -193,18 +236,7 @@ paths:
         '200':
           description: "User preferences updated"
 
-  /playlists:
-    get:
-      summary: "Get a list of playlists"
-      responses:
-        '200':
-          description: "A list of playlists"
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Playlist"
+  /playlists/new: #Users should be able to create a playlist
     post:
       summary: "Create a new playlist"
       requestBody:
@@ -216,77 +248,8 @@ paths:
       responses:
         '201':
           description: "Playlist successfully created"
-
-  /playlists/{playlistId}:
-    get:
-      summary: "Get details of a playlist"
-      parameters:
-        - name: "playlistId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        '200':
-          description: "Detailed information about a playlist"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Playlist"
-        '404':
-          description: "Playlist not found"
-    put:
-      summary: "Update playlist details"
-      parameters:
-        - name: "playlistId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PlaylistUpdate"
-      responses:
-        '200':
-          description: "Playlist successfully updated"
-    delete:
-      summary: "Delete a playlist"
-      parameters:
-        - name: "playlistId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        '204':
-          description: "Playlist successfully deleted"
-        '404': 
-          description: "Playlist not found"
-  
-  /songs/{songId}:
-    get:
-      summary: "Get details of a song"
-      parameters:
-        - name: "songId"
-          in: "path"
-          required: true
-          schema:
-            type: "integer"
-      responses:
-        '200':
-          description: "Detailed information about a song"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Song"
-        '404':
-          description: "Song not in the platform"
-        
-  
-  /playlists/{playlistId}/songs:
+          
+  /playlists/{playlistId}/songs: #Users should be able to se songs in a playlist/ Add/remove songs from THEIR playlist
     get:
       summary: "Get songs in a playlist"
       parameters:
@@ -324,6 +287,8 @@ paths:
       responses:
         '201':
           description: "Song added to the playlist"
+        '403':
+          description: "Forbidden - User not the owner of the playlist"
 
     delete:
       summary: "Remove a song from a playlist"
@@ -344,9 +309,160 @@ paths:
         '400':
           description: "Invalid name"
         '404':
-          description: "Song not found"
+          description: "Song not on playlist"
+        '403':
+          description: "Forbidden - User not the owner of the playlist"
+
+  /playlists/{playlistId}: #Users should be able to see the details of a playlist/ Update/delete THEIR playlists details
+    get:
+      summary: "Get details of a playlist"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Detailed information about a playlist"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Playlist"
+        '404':
+          description: "Playlist not found"
+  
+    put:
+      summary: "Update playlist details"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PlaylistUpdate"
+      responses:
+        '200':
+          description: "Playlist successfully updated"
+        '403':
+          description: "Forbidden - User not the owner of the playlist"
+        '404':
+          description: "Playlist not found"
+  
+    delete:
+      summary: "Delete a playlist"
+      parameters:
+        - name: "playlistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "Playlist successfully deleted"
+        '403':
+          description: "Forbidden - User not the owner of the playlist"
+        '404': 
+          description: "Playlist not found"
+  
+  /songs/{songId}: #Users should be able to see the details of a specific song
+    get:
+      summary: "Get details of a song"
+      parameters:
+        - name: "songId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "Detailed information about a song"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Song"
+        '404':
+          description: "Song not in the platform"
           
-  /artists/{artistId}:
+  /songs/upload: #users should be able to upload a song to the platform
+    post:
+      summary: "Upload a song"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Song"
+      responses:
+        '201':
+         description: "Song successfully uploaded"
+        '400':
+         description: "Bad request"
+         
+  /search: #Users should be able to search songs, artists, playlists
+    get:
+      summary: "Search for songs, artists, and playlists"
+      parameters:
+        - name: "query"
+          in: "query"
+          required: true
+          schema:
+            type: "string"
+        - name: "type"
+          in: "query"
+          required: false
+          schema:
+            type: "string"
+            enum: ["songs", "artists", "playlists"]
+      responses:
+        '200':
+          description: "List of items matching the query"
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Song"
+                  - $ref: "#/components/schemas/Artist"
+                  - $ref: "#/components/schemas/Playlist"
+        '404':
+          description: "No items found for the query"
+          
+  /artists/{artistId}/songs: #Users should be able to see a specific artists songs
+    get:
+      summary: "Get songs by a specific artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "List of songs by the specified artist"
+        '404':
+          description: "Artist or songs not found"
+          
+  /songs/genres/{genre}: #Users should be able to browse songs by genre
+    get:
+      summary: "Get songs by genre"
+      parameters:
+        - name: "genre"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: "List of songs in the specified genre"
+        '404':
+          description: "No songs found for the specified genre"
+  
+  /artists/{artistId}: #Users should see the details of an artist
     get:
       summary: "Get details of an artist"
       parameters:
@@ -365,9 +481,9 @@ paths:
         '404':
           description: "Artist not found"
   
-  /artists:
+  /artists: #Users should be able to see the artists on the platform/ Register as an artist
     get:
-      summary: "Get a list of artists"
+      summary: "Get a list of the artists on the platform"
       responses:
         '200':
           description: "A list of artists"
@@ -377,8 +493,25 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Artist"
+    post:
+      summary: "Create a new artist"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Artist" 
+      responses:
+        '201':
+          description: "Artist created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Artist"
+        '400':
+          description: "Bad request, invalid input"
                   
-  /artists/{artistId}/albums:
+  /artists/{artistId}/albums: #Users should be able to see a specific artists albums(playlists)
     get:
       summary: "Get albums of a specific artist"
       parameters:
@@ -398,6 +531,49 @@ paths:
                   $ref: "#/components/schemas/Playlist"  
         '404':
           description: "Artist not found or no albums available"
+          
+  /artist/{artistId}/following: #Users should be able to follow/ unfollow an artist
+    post:
+      summary: "Follow an artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "User started following the artist"
+        '400':
+          description: "Bad request"
+        '404':
+          description: "Artist not found"
+  
+    delete:
+      summary: "Unfollow an artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+        - name: "userId"
+          in: "query"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "User unfollowed the artist"
+        '400':
+          description: "Bad request"
+        '404':
+          description: "Artist not found"
 
 components:
   schemas:
@@ -419,15 +595,6 @@ components:
         email:
           type: "string"
           
-    UserRegistration:
-     type: "object"
-     properties:
-       username:
-         type: "string"
-       email:
-         type: "string"
-       password:
-         type: "string"
 
     Playlist:
       type: "object"
@@ -468,6 +635,10 @@ components:
                 - "dark"
             notifications:
               type: "boolean"
+        likedPlaylists:
+          type: "array"
+          items:
+            type: "integer"
   
     Song:
       type: "object"
@@ -498,6 +669,23 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Playlist" 
+        bio:
+          type: "string"  # Bio information about the artist
+        socialMedia:
+          type: "object"
+          properties:
+            twitter:
+              type: "string"
+            facebook:
+              type: "string"
+            instagram:
+              type: "string"
+            website:
+              type: "string"
+        followers:
+         type: "array"
+         items:
+           type: "integer" #user ids 
         songs:
           type: "array"
           items:
