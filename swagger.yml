@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   version: "1.0.0"
-  title: Music-streaming-api
+  title: AudioSync-api
   description: The API for a music streaming app
   
 paths:
