@@ -25,7 +25,7 @@ paths:
           description: "User successfully logged in"
         '401':
           description: "Incorrect username or password"
-   
+  
   /register:  #Users should create an account and get in the platform
     post:
       summary: "User registration"
@@ -93,7 +93,7 @@ paths:
           description: "User not found"
         '403':
           description: "Forbidden - User not the owner of the account"
-          
+  
   /users/{userId}/liked-songs:  #Users should b able to see their liked songs/ like/ unlike a song
     get:
       summary: "Get liked songs of a user"
@@ -146,7 +146,7 @@ paths:
       responses:
         '204':
           description: "Song unliked"
-          
+  
   /users/{userId}/liked-playlists: #Users should be able to see their liked playlist /like/ unlike a playlist
     get:
       summary: "Get liked playlists of a user"
@@ -200,7 +200,7 @@ paths:
       responses:
         '204':
           description: "Playlist unliked"
-          
+  
   /users/{userId}/preferences: #Users should be able to see/ update their account preferences
     get:
       summary: "Get user preferences"
@@ -248,7 +248,7 @@ paths:
       responses:
         '201':
           description: "Playlist successfully created"
-          
+  
   /playlists/{playlistId}/songs: #Users should be able to se songs in a playlist/ Add/remove songs from THEIR playlist
     get:
       summary: "Get songs in a playlist"
@@ -388,22 +388,7 @@ paths:
                 $ref: "#/components/schemas/Song"
         '404':
           description: "Song not in the platform"
-          
-  /songs/upload: #users should be able to upload a song to the platform
-    post:
-      summary: "Upload a song"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Song"
-      responses:
-        '201':
-         description: "Song successfully uploaded"
-        '400':
-         description: "Bad request"
-         
+  
   /search: #Users should be able to search songs, artists, playlists
     get:
       summary: "Search for songs, artists, and playlists"
@@ -431,7 +416,7 @@ paths:
                   - $ref: "#/components/schemas/Playlist"
         '404':
           description: "No items found for the query"
-          
+  
   /artists/{artistId}/songs: #Users should be able to see a specific artists songs
     get:
       summary: "Get songs by a specific artist"
@@ -446,7 +431,7 @@ paths:
           description: "List of songs by the specified artist"
         '404':
           description: "Artist or songs not found"
-          
+  
   /songs/genres/{genre}: #Users should be able to browse songs by genre
     get:
       summary: "Get songs by genre"
@@ -462,7 +447,7 @@ paths:
         '404':
           description: "No songs found for the specified genre"
   
-  /artists/{artistId}: #Users should see the details of an artist
+  /artists/{artistId}: #Users should see the details of an artist | #Artists should be able to update their details
     get:
       summary: "Get details of an artist"
       parameters:
@@ -478,6 +463,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Artist"
+        '404':
+          description: "Artist not found"
+          
+    put:
+      summary: "Update artist details"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ArtistUpdate"
+      responses:
+        '200':
+          description: "Artist details successfully updated"
+        '403':
+          description: "Forbidden - User not the owner of the artist profile"
         '404':
           description: "Artist not found"
   
@@ -510,7 +517,7 @@ paths:
                 $ref: "#/components/schemas/Artist"
         '400':
           description: "Bad request, invalid input"
-                  
+  
   /artists/{artistId}/albums: #Users should be able to see a specific artists albums(playlists)
     get:
       summary: "Get albums of a specific artist"
@@ -531,7 +538,7 @@ paths:
                   $ref: "#/components/schemas/Playlist"  
         '404':
           description: "Artist not found or no albums available"
-          
+  
   /artist/{artistId}/following: #Users should be able to follow/ unfollow an artist
     post:
       summary: "Follow an artist"
@@ -574,6 +581,48 @@ paths:
           description: "Bad request"
         '404':
           description: "Artist not found"
+          
+  /artists/{artistId}/songs/upload: #Artists should be able to upload a song
+    post:
+      summary: "Upload a song as an artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Song"
+      responses:
+        '201':
+          description: "Song successfully uploaded"
+        '400':
+          description: "Bad request"
+          
+  /artists/{artistId}/albums/upload: #Artists should be ble to upload an album
+    post:
+      summary: "Create and upload an album (playlist) as an artist"
+      parameters:
+        - name: "artistId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Playlist"
+      responses:
+        '201':
+          description: "Album (playlist) successfully created and uploaded by the artist"
+        '400':
+          description: "Bad request"
 
 components:
   schemas:
@@ -690,3 +739,23 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Song"
+    ArtistUpdate:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        genre:
+          type: "string"
+        bio:
+          type: "string"
+        socialMedia:
+          type: "object"
+          properties:
+            twitter:
+              type: "string"
+            facebook:
+              type: "string"
+            instagram:
+              type: "string"
+            website:
+              type: "string"
