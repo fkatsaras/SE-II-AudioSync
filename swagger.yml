@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   version: "1.0.0"
-  title: AudioSync-api
+  title: Music-streaming-api
   description: The API for a music streaming app
   
 paths:
@@ -40,6 +40,61 @@ paths:
           description: "User successfully registered"
         '409':
           description: "User account already exists"
+          
+  /users/{userId}/history:  # Users should be able to see their listening history
+    get:
+      summary: "Get listening history for a user"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "List of songs in the listening history"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Song"
+        '404':
+          description: "User not found or no history available"
+    delete:
+      summary: "Delete listening history for a user"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '204':
+          description: "Listening history successfully deleted"
+        '404':
+          description: "User not found or no history available"
+
+  /users/{userId}/recommended-songs:  # Users should be able to see recommended songs based on their listening history
+    get:
+      summary: "Get recommended songs for a user"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        '200':
+          description: "List of recommended songs"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Song"
+        '404':
+          description: "User not found or no recommendations available"
 
   /users/{userId}:  #users should be able to see another users details/ update THEIR details/ delete THEIR account
     get:
@@ -702,9 +757,7 @@ components:
           type: "string"
         genre:
           type: "string"
-        source:
-          type: "string"
-          
+  
     Artist:
       type: "object"
       properties:
@@ -739,6 +792,7 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Song"
+  
     ArtistUpdate:
       type: "object"
       properties:
