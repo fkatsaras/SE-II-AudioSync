@@ -43,6 +43,9 @@ jobs:
       - name: Install Railway
         run: npm i -g @railway/cli
 
+      - name: Login to Railway
+        run: railway login
+
       - name: Deploy to Railway
         run: railway up --service a5d921c2-b785-4342-959f-9bef93e5666a
 
