@@ -1,6 +1,5 @@
 const test = require('ava');
 const got = require('got');
-
 function sum(a, b) {
     return a + b;
 }
