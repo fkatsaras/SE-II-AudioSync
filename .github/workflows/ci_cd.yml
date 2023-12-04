@@ -1,0 +1,52 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Railway
+        run: npm i -g @railway/cli
+
+      - name: Set Railway Token
+        run: echo "RAILWAY_TOKEN=${{ secrets.RAILWAY_API_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Deploy to Railway
+        run: railway up --service a5d921c2-b785-4342-959f-9bef93e5666a
+
+        
