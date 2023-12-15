@@ -6,6 +6,7 @@
   "scripts": {
     "test": "c8 ava",
     "auth:test": "c8 ava auth.test.js",
+    "user:test": "c8 ava users.test.js",
     "prestart": "npm install",
     "start": "node index.js"
   },
@@ -14,7 +15,7 @@
   ],
   "license": "Unlicense",
   "private": true,
-  "dependencies": {
+  "dependencies": { 
     "connect": "^3.2.0",
     "js-yaml": "^3.3.0",
     "oas3-tools": "^2.2.3",
