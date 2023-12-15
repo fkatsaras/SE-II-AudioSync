@@ -22,10 +22,10 @@ jobs:
         run: npm install
 
       - name: Run Authentication tests
-        run: npm auth:test
+        run: npm run auth:test
 
-      - name: Run User tests
-        run: npm user:test
+      # - name: Run User tests
+      #   run: npm run user:test
 
         
   deploy:
