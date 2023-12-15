@@ -14,7 +14,6 @@ test.before(async (t) => {
     t.context.server = http.createServer(app);
     t.context.prefixUrl = await listen(t.context.server);
     t.context.got = got.extend({ prefixUrl: t.context.prefixUrl, responseType: 'json'});
-    t.timeout(20000);
 
 });
 
@@ -32,9 +31,9 @@ test('Get listening history for a user - Success', async (t) => {
     const userId = 123;
 
     console.log("Before request");
-    const response = await t.context.got(`${BASE_URL}/users/${userId}/history`);
+    const {body, statusCode} = await t.context.got(`${BASE_URL}/users/${userId}/history`);
     
 
-    t.is(response.statusCode, 200);
+    t.is(statusCode, 200);
     
 });
