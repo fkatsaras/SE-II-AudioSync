@@ -7,6 +7,8 @@ const app = require('../index.js');
 
 const BASE_URL = 'http://localhost:8080';
 
+const { artistArtistIdFollowingDELETE } = require('../service/DefaultService.js');
+
 test.before(async (t) => {
 
     //Start server before running tests
@@ -44,6 +46,21 @@ test('POST /artist/{artistId}/following - Follow an artist', async (t) => {
     // For example, check if the user started following the artist
 });
 
+test('Unfolow artist by function', async t => {
+
+    t.timeout(10000);
+    
+
+    // Set up test data
+    const artistId = 789;
+    const userId = 123;
+
+    const response = await artistArtistIdFollowingDELETE( artistId, userId);
+  
+    // Check the response status code
+    t.is(response.statusCode, 204);
+});
+
 test('DELETE /artist/{artistId}/following - Unfollow an artist', async (t) => {
     t.timeout(30000);
 
@@ -56,6 +73,8 @@ test('DELETE /artist/{artistId}/following - Unfollow an artist', async (t) => {
 
     // Check the response status code
     t.is(response.statusCode, 204);
+
+    console.log(response.body, response.statusCode);
 
     // Add additional checks if needed
     // For example, check if the user unfollowed the artist
