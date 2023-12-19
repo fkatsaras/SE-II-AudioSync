@@ -24,17 +24,17 @@ jobs:
       - name: Run Authentication tests
         run: npm run auth:test
 
-       - name: Run User1 tests
-         run: npm run user1:test
+      - name: Run User1 tests
+        run: npm run user1:test
 
-       - name: Run User2 tests
-         run: npm run user2:test
+      - name: Run User2 tests
+        run: npm run user2:test
         
-       - name: Run User3 tests
-         run: npm run user3:test
+      - name: Run User3 tests
+        run: npm run user3:test
 
-       - name: Run Artist2 tests
-         run: npm run artist2:test
+      - name: Run Artist2 tests
+        run: npm run artist2:test
 
         
   deploy:
