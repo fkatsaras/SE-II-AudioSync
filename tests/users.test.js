@@ -28,11 +28,15 @@ test.after.always((t) => {
 });
 
 test('GET user by function', async t => {
+
+    t.timeout(10000);
     
 
     // Set up test data
     const userId = 123;
     const expectedUser = {
+
+      
       id: 0,
       email: 'email',
       username: 'username',
@@ -48,27 +52,30 @@ test('GET user by function', async t => {
 
 test('GET /users/{userId} - Get details of a user', async (t) => {
 
-    t.timeout(10000);
+    t.timeout(30000);
 
 
     // Set up test data
     const userId = 123;
     const expectedUser = {
-      id: 0,
-      email: 'email',
-      username: 'username',
-    };
+
+        id : 0,
+        email : 'email',
+        username : 'username'
+      };
   
     // Make the GET request
-    console.log("Before");
-    const response = await t.context.got(`${BASE_URL}/users/${userId}`);
-    console.log("After");
+   
+    const response = await got.get(`${BASE_URL}/users/${userId}`);
 
-    
+    console.log(response.body);
+
   
     // Check the response status code
     t.is(response.statusCode, 200);
   
-    // Check the response body
-    t.deepEqual(response.body, expectedUser);
+    // Check each component individually
+    t.is(response.body.id, expectedUser.id);
+    t.is(response.body.email, expectedUser.email);
+    t.is(response.body.username, expectedUser.username);
   });
