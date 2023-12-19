@@ -24,8 +24,8 @@ jobs:
       - name: Run Authentication tests
         run: npm run auth:test
 
-      # - name: Run User tests
-      #   run: npm run user:test
+       - name: Run User1 tests
+         run: npm run user1:test
 
         
   deploy:

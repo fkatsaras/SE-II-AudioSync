@@ -27,7 +27,6 @@ test.after.always((t) => {
 
 });
 
-// USER GET - PUT - DELETE REQUESTS ------------------------------------------------------------------
 
 test('GET user by function', async t => {
 
@@ -45,8 +44,6 @@ test('GET user by function', async t => {
     };
 
     const response = await usersUserIdGET(userId);
-
-    console.log(response);
   
     t.deepEqual(response, expectedUser);
 });
@@ -95,7 +92,6 @@ test('GET /users/{userId} - Get details of a user', async (t) => {
         json: updatedUserData
     });
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 200);
@@ -127,7 +123,6 @@ test('GET /users/{userId}/preferences - Get user preferences', async (t) => {
     // Make the GET request
     const response = await got.get(`${BASE_URL}/users/${userId}/preferences`);
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 200);
@@ -152,11 +147,8 @@ test('PUT /users/{userId}/preferences - Update user preferences', async (t) => {
         json: updatedUserPreferences
     });
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 200);
 
-    // Add additional checks if needed
-    // For example, check if the user preferences are successfully updated
 });
