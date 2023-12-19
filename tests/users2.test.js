@@ -34,7 +34,6 @@ test('GET /users/{userId}/liked-playlists - Get liked playlists of a user', asyn
     // Make the GET request
     const response = await got.get(`${BASE_URL}/users/${userId}/liked-playlists`);
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 200);
@@ -62,7 +61,6 @@ test('POST /users/{userId}/liked-playlists - Like a playlist', async (t) => {
         json: playlistToLike
     });
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 201);
@@ -98,7 +96,6 @@ test('GET /users/{userId}/liked-songs - Get liked songs of a user', async (t) =>
     // Make the GET request
     const response = await got.get(`${BASE_URL}/users/${userId}/liked-songs`);
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 200);
@@ -126,7 +123,6 @@ test('POST /users/{userId}/liked-songs - Like a song', async (t) => {
         json: songToLike
     });
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 201);

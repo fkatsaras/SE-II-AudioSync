@@ -6,6 +6,7 @@
   "scripts": {
     "test": "c8 ava",
     "auth:test": "c8 ava tests/auth.test.js",
+    "userall:test": "npm run user1:test && npm run user2:test && npm run user3:test", 
     "user1:test": "c8 ava tests/users1.test.js",
     "user2:test": "c8 ava tests/users2.test.js",
     "user3:test": "c8 ava tests/users3.test.js",
