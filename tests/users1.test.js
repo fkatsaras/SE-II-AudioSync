@@ -27,7 +27,6 @@ test.after.always((t) => {
 
 });
 
-// USER GET - PUT - DELETE REQUESTS ------------------------------------------------------------------
 
 test('GET user by function', async t => {
 
@@ -157,6 +156,4 @@ test('PUT /users/{userId}/preferences - Update user preferences', async (t) => {
     // Check the response status code
     t.is(response.statusCode, 200);
 
-    // Add additional checks if needed
-    // For example, check if the user preferences are successfully updated
 });
