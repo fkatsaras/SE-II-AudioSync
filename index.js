@@ -4,6 +4,8 @@ var path = require('path');
 var http = require('http');
 
 var oas3Tools = require('oas3-tools');
+
+var bodyParser = require('body-parser');
 var serverPort = 8080;
 
 // swaggerRouter configuration

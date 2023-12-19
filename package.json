@@ -5,7 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "c8 ava",
-    "auth:test": "c8 ava auth.test.js",
+    "auth:test": "c8 ava tests/auth.test.js",
+    "userall:test": "npm run user1:test && npm run user2:test && npm run user3:test", 
+    "user1:test": "c8 ava tests/users1.test.js",
+    "user2:test": "c8 ava tests/users2.test.js",
+    "user3:test": "c8 ava tests/users3.test.js",
+    "artist2:test" : "c8 ava tests/artists2.test.js",
+    "playlist:test": "c8 ava tests/playlist.test.js",
     "prestart": "npm install",
     "start": "node index.js"
   },
@@ -18,12 +24,14 @@
     "connect": "^3.2.0",
     "express": "^4.18.2",
     "js-yaml": "^3.3.0",
-    "oas3-tools": "^2.2.3",
-    "test-listen": "^1.1.0"
+    "oas3-tools": "^2.2.3"
+    
   },
   "devDependencies": {
     "ava": "^5.3.1",
     "c8": "^8.0.1",
-    "got": "^11.8.3"
+    "got": "^11.8.3",
+    "nock": "^13.4.0",
+    "test-listen": "^1.1.0"
   }
 }

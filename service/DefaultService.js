@@ -10,7 +10,14 @@
  **/
 exports.artistArtistIdFollowingDELETE = function(artistId,userId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+
+    
+    // Assuming the logic is successful, send a 204 No Content response
+    resolve({
+      statusCode: 204,
+      body: {}
+    });
+
   });
 }
 
