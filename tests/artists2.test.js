@@ -77,13 +77,10 @@ test('POST /artists/{artistId}/albums/upload - Create and upload an album as an 
         json: albumData
     });
 
-    console.log(response.body);
 
     // Check the response status code
     t.is(response.statusCode, 201);
 
-    // Add additional checks if needed
-    // For example, check if the album is successfully created and uploaded by the artist
 });
 
 test('POST /artists/{artistId}/songs/upload - Upload a song as an artist', async (t) => {
@@ -106,6 +103,4 @@ test('POST /artists/{artistId}/songs/upload - Upload a song as an artist', async
     // Check the response status code
     t.is(response.statusCode, 201);
 
-    // Add additional checks if needed
-    // For example, check if the song is successfully uploaded by the artist
 });

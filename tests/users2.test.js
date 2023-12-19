@@ -38,11 +38,6 @@ test('GET /users/{userId}/liked-playlists - Get liked playlists of a user', asyn
     // Check the response status code
     t.is(response.statusCode, 200);
 
-    // Add additional checks if needed
-    // For example, check if the response body is an array of playlists
-    // t.true(Array.isArray(response.body));
-    // t.true(response.body.length > 0);
-    // t.true(response.body[0].hasOwnProperty('playlistProperty'));
 });
 
 
