@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "c8 ava",
-    "auth:test": "c8 ava auth.test.js",
-    "songs:test":"c8 ava songs.test.js",
+    "auth:test": "c8 ava tests/auth.test.js",
+    "songs:test":"c8 ava tests/songs.test.js",
     "prestart": "npm install",
     "start": "node index.js"
   },
