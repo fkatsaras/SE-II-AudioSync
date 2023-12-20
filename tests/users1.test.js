@@ -70,10 +70,6 @@ test('GET /users/{userId} - Get details of a user', async (t) => {
     // Check the response status code
     t.is(response.statusCode, 200);
   
-    // Check each component individually
-    // t.is(response.body.id, expectedUser.id);
-    // t.is(response.body.email, expectedUser.email);
-    // t.is(response.body.username, expectedUser.username);
   });
 
   test('PUT /users/{userId} - Update user details', async (t) => {
