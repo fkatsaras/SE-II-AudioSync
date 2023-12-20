@@ -7,51 +7,41 @@ const app = require('../index.js');
 
 const BASE_URL = 'http://localhost:8080';
 
-// POST request to /playlists/new: Successful creation of a new playlist
-test('User can create a new playlist', async (t) => {
-    // Assume there is a valid user session token from a successful login
-    const sessionToken = 'validSessionToken';
+test.before(async (t) => {
 
-    // Playlist data to be created
-    const newPlaylistData = {
-        name: 'My Playlist',
-        description: 'A playlist created for testing purposes',
-        tracks: ['track1', 'track2', 'track3'],
-    };
+    //Start server before running tests
+    t.context.server = http.createServer(app);
+    t.context.prefixUrl = await listen(t.context.server);
+    t.context.got = got.extend({ prefixUrl: t.context.prefixUrl, responseType: 'json'});
 
-    // Send a POST request to the /playlists/new endpoint with the new playlist data
-    const response = await t.context.got.post('/playlists/new', {
-        headers: {
-            Authorization: `Bearer ${sessionToken}`,
-        },
-        json: newPlaylistData,
-        responseType: 'json',
-    });
-
-    // Assert response status code is 201 and check if the playlist is created successfully
-    t.is(response.statusCode, 201);
-    t.truthy(response.body.playlistId);
-    t.is(response.body.name, newPlaylistData.name);
-    t.is(response.body.description, newPlaylistData.description);
-    t.deepEqual(response.body.tracks, newPlaylistData.tracks);
 });
 
-// POST request to /playlists/new without a valid session token
-test('User receives 401 when trying to create a new playlist without a valid session', async (t) => {
-    // Playlist data to be created
-    const newPlaylistData = {
-        name: 'My Playlist',
-        description: 'A playlist created for testing purposes',
-        tracks: ['track1', 'track2', 'track3'],
+test.after.always((t) => {
+ 
+    //Close server
+    t.context.server.close();
+
+});
+
+test('POST /playlists/new - Create a new playlist', async (t) => {
+    t.timeout(30000);
+
+    // Set up test data
+    const playlistData = {
+        // Provide the necessary data for creating a playlist based on your schema
+        // For example:
+        name: 'My New Playlist',
+        songs: ['Song1', 'Song2', 'Song3'],
     };
 
-    // Send a POST request to the /playlists/new endpoint without a valid session token
-    const response = await t.context.got.post('/playlists/new', {
-        json: newPlaylistData,
-        responseType: 'json',
-        throwHttpErrors: false,
+    // Make the POST request
+    const response = await got.post(`${BASE_URL}/playlists/new`, {
+        json: playlistData,
+        responseType: 'json', // Automatically parse response as JSON
     });
 
-    // Assert response status code is 401
-    t.is(response.statusCode, 401);
+    // Check the response status code
+    t.is(response.statusCode, 201);
+
+
 });

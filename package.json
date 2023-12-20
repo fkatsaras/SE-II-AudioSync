@@ -12,6 +12,7 @@
     "user3:test": "c8 ava tests/users3.test.js",
     "artist2:test" : "c8 ava tests/artists2.test.js",
     "playlist:test": "c8 ava tests/playlist.test.js",
+    "songs:test" : "c8 ava tests/songs.test.js",
     "prestart": "npm install",
     "start": "node index.js"
   },
