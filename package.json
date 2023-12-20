@@ -6,6 +6,7 @@
   "scripts": {
     "test": "c8 ava",
     "auth:test": "c8 ava auth.test.js",
+    "artist1:test":"c8 ava tests/artist.test.js",
     "prestart": "npm install",
     "start": "node index.js"
   },
@@ -23,6 +24,6 @@
   "devDependencies": {
     "ava": "^5.3.1",
     "c8": "^8.0.1",
-    "got": "^11.8.3"
+    "got": "^11.8.6"
   }
 }
